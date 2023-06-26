@@ -4,7 +4,7 @@ import Navbar from './layout/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/Home';
 import Today from './pages/Today';
-import AddTask from './tasks/AddTask';
+import AddTask from './pages/AddTask';
 
 function App() {
   return (
