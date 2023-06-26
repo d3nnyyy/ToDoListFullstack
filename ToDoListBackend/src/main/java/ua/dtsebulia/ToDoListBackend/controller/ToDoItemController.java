@@ -5,6 +5,7 @@ import ua.dtsebulia.ToDoListBackend.exception.ItemNotFoundException;
 import ua.dtsebulia.ToDoListBackend.model.ToDoItem;
 import ua.dtsebulia.ToDoListBackend.repository.ToDoItemRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,6 +29,12 @@ public class ToDoItemController {
         return repository.findById(id).orElseThrow(
                 () -> new ItemNotFoundException(id)
         );
+    }
+
+    @GetMapping("/today")
+    public List<ToDoItem> getToDoItemsWithDeadlineToday() {
+        LocalDate today = LocalDate.now();
+        return repository.findItemsByDeadline(today);
     }
 
     @PostMapping

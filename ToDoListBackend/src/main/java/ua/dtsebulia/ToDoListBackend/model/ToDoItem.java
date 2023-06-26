@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class ToDoItem {
     private String title;
     private String description;
     @FutureOrPresent
-    private Date deadline;
+    private LocalDate deadline;
     @Min(1)
     @Max(4)
     private Integer priority;
