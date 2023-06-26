@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 
 export default function Home() {
      const [items, setItems] = React.useState([]);
-     const { id } = useParams();
 
      useEffect(() => {
           loadItems();
@@ -20,11 +19,18 @@ export default function Home() {
           loadItems();
      };
 
+     const markAsDone = async (id) => {
+          await axios.put(`http://localhost:8080/todo/${id}`, { done: true, completedDate: new Date() });
+          loadItems();
+     };
+
+     const filteredItems = items.filter((item) => !item.done);
+
      return (
           <div className="container bg-dark">
                <div className="py-4 bg-dark">
                     <ul className="list-group border shadow bg-dark">
-                         {items.map((item, index) => (
+                         {filteredItems.map((item, index) => (
                               <li key={index} className="list-group-item bg-dark text-light">
                                    <div className="d-flex justify-content-between">
                                         <div>
@@ -39,6 +45,9 @@ export default function Home() {
                                              <Link className="btn btn-dark border-white mx-2" to={`/edituser/${item.id}`}>
                                                   Edit
                                              </Link>
+                                             <button className='btn btn-success mx-2' onClick={() => markAsDone(item.id)}>
+                                                  Done
+                                             </button>
                                              <button className="btn btn-danger mx-2" onClick={() => deleteItem(item.id)}>
                                                   Delete
                                              </button>
@@ -48,6 +57,7 @@ export default function Home() {
                          ))}
                     </ul>
                </div>
+
           </div>
      );
 }
