@@ -15,7 +15,8 @@ export default function Navbar({ taskCount }) {
                               <span className="text-light">Done Today: {taskCount}</span>
                          </div>
                          <div className='ms-2'>
-                              <Link className="btn btn-outline-info me-4" to="/today">Today</Link>
+                              <Link className="btn btn-outline-info me-2" to="/done-today">Done Today</Link>
+                              <Link className="btn btn-outline-info me-4" to="/today">To do Today</Link>
                               <Link className="btn btn-outline-warning me-2" to="/addTask">Add task</Link>
                          </div>
                     </div>

@@ -7,6 +7,7 @@ import AddTask from './pages/AddTask';
 import Navbar from './layout/Navbar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import TasksDoneToday from './pages/TasksDoneToday';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Navbar taskCount={taskCount} />
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/done-today" element={<TasksDoneToday />} />
           <Route exact path="/today" element={<Today />} />
           <Route exact path="/addTask" element={<AddTask />} />
         </Routes>
