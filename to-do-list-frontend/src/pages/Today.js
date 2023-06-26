@@ -20,11 +20,13 @@ export default function Today() {
           loadItems();
      };
 
+     const undoneItems = items.filter(item => !item.done);
+
      return (
           <div className="container bg-dark">
                <div className="py-4 bg-dark">
                     <ul className="list-group border shadow bg-dark">
-                         {items.map((item, index) => (
+                         {undoneItems.map((item, index) => (
                               <li key={index} className="list-group-item bg-dark text-light">
                                    <div className="d-flex justify-content-between">
                                         <div>
