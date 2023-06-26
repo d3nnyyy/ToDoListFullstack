@@ -1,19 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Navbar() {
-
-     const [taskCount, setTaskCount] = useState(0);
-
-     useEffect(() => {
-          fetchTaskCount();
-     }, []);
-
-     const fetchTaskCount = async () => {
-          const result = await axios.get('http://localhost:8080/todo/done-today');
-          setTaskCount(result.data.length);
-     };
+export default function Navbar({ taskCount }) {
 
      return (
           <div>
