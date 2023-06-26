@@ -37,6 +37,12 @@ public class ToDoItemController {
         return repository.findItemsByDeadline(today);
     }
 
+    @GetMapping("/done-today")
+    public List<ToDoItem> getToDoItemsDoneToday() {
+        LocalDate today = LocalDate.now();
+        return repository.findItemsByDoneAndCompletedDate(true, today);
+    }
+
     @PostMapping
     public ToDoItem createToDoItem(@RequestBody ToDoItem newToDoItem) {
         return repository.save(newToDoItem);
@@ -46,15 +52,28 @@ public class ToDoItemController {
     public ToDoItem updateToDoItem(@PathVariable Integer id, @RequestBody ToDoItem updatedToDoItem) {
         return repository.findById(id)
                 .map(toDoItem -> {
-                    toDoItem.setTitle(updatedToDoItem.getTitle());
-                    toDoItem.setDescription(updatedToDoItem.getDescription());
-                    toDoItem.setDeadline(updatedToDoItem.getDeadline());
-                    toDoItem.setPriority(updatedToDoItem.getPriority());
+                    if (updatedToDoItem.getTitle() != null) {
+                        toDoItem.setTitle(updatedToDoItem.getTitle());
+                    }
+                    if (updatedToDoItem.getDescription() != null) {
+                        toDoItem.setDescription(updatedToDoItem.getDescription());
+                    }
+                    if (updatedToDoItem.getDeadline() != null) {
+                        toDoItem.setDeadline(updatedToDoItem.getDeadline());
+                    }
+                    if (updatedToDoItem.getPriority() != null) {
+                        toDoItem.setPriority(updatedToDoItem.getPriority());
+                    }
+                    if (updatedToDoItem.getDone() != null) {
+                        toDoItem.setDone(updatedToDoItem.getDone());
+                    }
+                    if (updatedToDoItem.getCompletedDate() != null) {
+                        toDoItem.setCompletedDate(updatedToDoItem.getCompletedDate());
+                    }
                     return repository.save(toDoItem);
-                }).orElseThrow(
-                        () -> new ItemNotFoundException(id)
-                );
+                }).orElseThrow(() -> new ItemNotFoundException(id));
     }
+
 
     @DeleteMapping("{id}")
     public String deleteToDoItem(@PathVariable Integer id) {
