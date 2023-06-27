@@ -28,7 +28,7 @@ function App() {
   };
 
   return (
-    <div className="App bg-dark vh-100">
+    <div className="App bg-dark vh-200">
       <Router>
         <Navbar taskCount={taskCount} />
         <Routes>
