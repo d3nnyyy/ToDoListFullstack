@@ -35,10 +35,10 @@ export default function Today() {
                                              <p>Priority: {item.priority}</p>
                                         </div>
                                         <div>
-                                             <Link className="btn btn-dark border-white mx-2" to={`/viewuser/${item.id}`}>
+                                             <Link className="btn btn-dark border-white mx-2" to={`/viewTask/${item.id}`}>
                                                   View
                                              </Link>
-                                             <Link className="btn btn-dark border-white mx-2" to={`/edituser/${item.id}`}>
+                                             <Link className="btn btn-dark border-white mx-2" to={`/editTask/${item.id}`}>
                                                   Edit
                                              </Link>
                                              <button className="btn btn-danger mx-2" onClick={() => deleteItem(item.id)}>

@@ -8,6 +8,7 @@ import Navbar from './layout/Navbar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TasksDoneToday from './pages/TasksDoneToday';
+import ViewTask from './pages/ViewTask';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
           <Route exact path="/done-today" element={<TasksDoneToday />} />
           <Route exact path="/today" element={<Today />} />
           <Route exact path="/addTask" element={<AddTask />} />
+          <Route exact path="/viewTask/:id" element={<ViewTask />} />
         </Routes>
       </Router>
     </div>
