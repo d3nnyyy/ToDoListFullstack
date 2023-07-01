@@ -9,10 +9,17 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TasksDoneToday from './pages/TasksDoneToday';
 import ViewTask from './pages/ViewTask';
+import EditTask from './pages/EditTask';
+
 
 function App() {
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [taskCount, setTaskCount] = useState(0);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   useEffect(() => {
     fetchTaskCount();
@@ -28,15 +35,16 @@ function App() {
   };
 
   return (
-    <div className="App bg-dark vh-200">
+    <div className="App bg-dark vh-100">
       <Router>
-        <Navbar taskCount={taskCount} />
+        <Navbar taskCount={taskCount} onSearch={handleSearch} />
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Home searchQuery={searchQuery} updateTaskCount={fetchTaskCount} />} />
           <Route exact path="/done-today" element={<TasksDoneToday />} />
           <Route exact path="/today" element={<Today />} />
           <Route exact path="/addTask" element={<AddTask />} />
           <Route exact path="/viewTask/:id" element={<ViewTask />} />
+          <Route exact path='/editTask/:id' element={<EditTask />} />
         </Routes>
       </Router>
     </div>

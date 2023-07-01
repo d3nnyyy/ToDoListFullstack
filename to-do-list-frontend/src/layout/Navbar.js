@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AiOutlineMenu, AiOutlineSearch, AiOutlineHome, AiOutlineCheckCircle } from 'react-icons/ai';
-import { RiTodoLine } from 'react-icons/ri';
+import { AiOutlineSearch, AiOutlineHome } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
+import { MdToday } from 'react-icons/md';
 
-export default function Navbar({ taskCount }) {
-     const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function Navbar({ taskCount, onSearch }) {
 
-     const toggleMenu = () => {
-          setIsMenuOpen(!isMenuOpen);
+     const handleInputChange = (event) => {
+          const query = event.target.value;
+          onSearch(query);
      };
 
      return (
@@ -17,15 +17,7 @@ export default function Navbar({ taskCount }) {
                style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
           >
                <div className="container">
-                    <button
-                         className="navbar-toggler text-light"
-                         type="button"
-                         onClick={toggleMenu}
-                         aria-label="Toggle navigation"
-                    >
-                         <AiOutlineMenu />
-                    </button>
-                    <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
+                    <div className={`collapse navbar-collapse`}>
                          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                               <li className="nav-item">
                                    <Link className="nav-link" to="/">
@@ -33,15 +25,15 @@ export default function Navbar({ taskCount }) {
                                         Home
                                    </Link>
                               </li>
-                              <li className="nav-item">
+                              {/* <li className="nav-item">
                                    <Link className="nav-link" to="/tasks">
                                         <RiTodoLine className="text-light" />
                                         Tasks
                                    </Link>
-                              </li>
+                              </li> */}
                               <li className="nav-item">
                                    <Link className="nav-link" to="/today">
-                                        <AiOutlineCheckCircle className="text-light" />
+                                        <MdToday className="text-light" />
                                         Today
                                    </Link>
                               </li>
@@ -50,13 +42,15 @@ export default function Navbar({ taskCount }) {
                               <span className="text-light me-3">Done Today: {taskCount}</span>
                               <form className="d-flex">
                                    <div className="input-group">
-                                        <input className="form-control" type="search" placeholder="Search" aria-label="Search" />
-                                        <button className="btn btn-light text-dark" type="submit">
-                                             <AiOutlineSearch />
-                                        </button>
+                                        <input
+                                             className="form-control"
+                                             type="search"
+                                             placeholder="Search"
+                                             aria-label="Search"
+                                             onChange={handleInputChange}
+                                        />
                                    </div>
                               </form>
-
                          </div>
                     </div>
                </div>
