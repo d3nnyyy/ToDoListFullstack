@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +23,6 @@ public class ToDoItem {
     private Integer id;
     private String title;
     private String description;
-    @FutureOrPresent
     private LocalDate deadline;
     private LocalDate completedDate;
     @Min(1)

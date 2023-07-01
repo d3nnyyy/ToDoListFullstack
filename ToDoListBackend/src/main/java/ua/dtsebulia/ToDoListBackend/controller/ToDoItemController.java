@@ -1,11 +1,14 @@
 package ua.dtsebulia.ToDoListBackend.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ua.dtsebulia.ToDoListBackend.exception.ItemNotFoundException;
 import ua.dtsebulia.ToDoListBackend.model.ToDoItem;
 import ua.dtsebulia.ToDoListBackend.repository.ToDoItemRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 
 @RestController
@@ -44,12 +47,18 @@ public class ToDoItemController {
     }
 
     @PostMapping
-    public ToDoItem createToDoItem(@RequestBody ToDoItem newToDoItem) {
-        return repository.save(newToDoItem);
+    public ToDoItem createToDoItem(@Valid @RequestBody ToDoItem toDoItem) {
+        if (toDoItem.getDeadline() != null && toDoItem.getDeadline().isBefore(ChronoLocalDate.from(LocalDateTime.now()))) {
+            throw new IllegalArgumentException("Deadline cannot be in the past");
+        }
+
+        toDoItem.setCompletedDate(null);
+
+        return repository.save(toDoItem);
     }
 
     @PutMapping("{id}")
-    public ToDoItem updateToDoItem(@PathVariable Integer id, @RequestBody ToDoItem updatedToDoItem) {
+    public ToDoItem updateToDoItem(@PathVariable Integer id, @Valid @RequestBody ToDoItem updatedToDoItem) {
         return repository.findById(id)
                 .map(toDoItem -> {
                     if (updatedToDoItem.getTitle() != null) {
