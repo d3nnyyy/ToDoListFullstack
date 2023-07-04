@@ -11,13 +11,12 @@ The ToDo List Application is a simple web application that allows users to manag
 - [API Endpoints](#api-endpoints)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
 - View all tasks
-- View a specific task by its ID
 - View tasks with today's deadline
+- Search tasks by title
 - Add a new task
 - Update an existing task
 - Delete a task
@@ -27,9 +26,9 @@ The ToDo List Application is a simple web application that allows users to manag
 
 The application is built using the following technologies:
 
-- Backend: Java Spring Boot, Spring Data JPA
+- Backend: Java Spring Boot, Spring Data JPA, 
 - Frontend: React.js, React Router, Bootstrap
-- Database: MySQl
+- Database: MySQL
 - Build Tool: Maven
 - Other Dependencies: react-confirm-alert, date-fns
 
@@ -82,8 +81,13 @@ The backend provides the following API endpoints:
 - `DELETE /todo/{id}`: Delete a task by its ID
 
 ## Screenshots 
-
-
+<div style="display: flex; justify-content: center;">
+<img src="images/allTasks.jpg" alt="Alt Text" width="300" height="200">
+<img src="images/todaysTasks.jpg" alt="Alt Text" width="300" height="200">
+<img src="images/searchTasks.jpg" alt="Alt Text" width="300" height="200">
+<img src="images/addTask.jpg" alt="Alt Text" width="300" height="200">
+<img src="images/editTask.jpg" alt="Alt Text" width="300" height="200">
+</div>
 
 ## Contributing
 
