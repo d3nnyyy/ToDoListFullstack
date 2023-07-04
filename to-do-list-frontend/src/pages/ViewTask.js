@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowAltCircleLeft, FaEdit } from 'react-icons/fa';
 
-
 export default function ViewTask() {
+
         const { id } = useParams();
         const [task, setTask] = useState(null);
 
@@ -13,12 +13,14 @@ export default function ViewTask() {
         }, []);
 
         const fetchTask = async () => {
+
                 try {
                         const response = await axios.get(`http://localhost:8080/todo/${id}`);
                         setTask(response.data);
                 } catch (error) {
                         console.error('Error:', error);
                 }
+
         };
 
         if (!task) {
@@ -32,26 +34,17 @@ export default function ViewTask() {
                                         <div className="card-header border-light">
                                                 <h1 className="mb-0">{task.title}</h1>
                                         </div>
+
+                                        {/* TASK INFO */}
+
                                         <div className="card-body">
                                                 <p className="card-text"><strong>Description:</strong> {task.description}</p>
                                                 <p className="card-text"><strong>Deadline:</strong> {task.deadline}</p>
                                                 <p className="card-text"><strong>Priority:</strong> {task.priority}</p>
-                                                <p className="card-text">
-                                                        <strong>Status:</strong>{' '}
-                                                        {task.done ? (
-                                                                <span className="text-success">
-                                                                        Completed
-                                                                </span>
-                                                        ) : (
-                                                                <span className="text-danger">
-                                                                        Pending
-                                                                </span>
-                                                        )}
-                                                        {task.done && (
-                                                                <p className="card-text">Completed Date: {task.completedDate}</p>
-                                                        )}
-                                                </p>
                                         </div>
+
+                                        {/* BUTTONS */}
+
                                         <div className="card-footer">
                                                 <Link className="btn btn-outline-light me-2" to="/">
                                                         <FaArrowAltCircleLeft /> Back

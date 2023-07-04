@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AiOutlineSearch, AiOutlineHome } from 'react-icons/ai';
+import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
 import { MdToday } from 'react-icons/md';
 
@@ -25,12 +25,6 @@ export default function Navbar({ taskCount, onSearch }) {
                                         Home
                                    </Link>
                               </li>
-                              {/* <li className="nav-item">
-                                   <Link className="nav-link" to="/tasks">
-                                        <RiTodoLine className="text-light" />
-                                        Tasks
-                                   </Link>
-                              </li> */}
                               <li className="nav-item">
                                    <Link className="nav-link" to="/today">
                                         <MdToday className="text-light" />

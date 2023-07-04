@@ -6,26 +6,52 @@ import { addDays } from 'date-fns';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export default function EditTask() {
+
         const navigate = useNavigate();
         const [items, setItems] = useState([]);
         const { id } = useParams();
+        const titleInputRef = useRef(null);
+
+        const [deadlineError, setDeadlineError] = useState('');
+        const [titleError, setTitleError] = useState('');
+
+        const today = new Date();
+        const yesterday = addDays(today, -1);
+
         const [newTask, setNewTask] = useState({
                 title: '',
                 description: '',
                 deadline: null,
-                priority: 1,
+                priority: null,
         });
-        const [deadlineError, setDeadlineError] = useState('');
-        const [titleError, setTitleError] = useState('');
+
+        const PRIORITY_COLORS = {
+                1: '#FF5757',
+                2: '#F5A623',
+                3: '#4A90E2',
+                defaultColor: '#CCC',
+        };
+
+        useEffect(() => {
+                titleInputRef.current.focus();
+        }, []);
+
+        useEffect(() => {
+                loadTask();
+        }, []);
+
+        const loadTask = async () => {
+                const result = await axios.get(`http://localhost:8080/todo/${id}`);
+                setNewTask(result.data);
+        }
 
         const loadItems = async () => {
                 const result = await axios.get('http://localhost:8080/todo');
                 setItems(result.data);
         };
 
-        const titleInputRef = useRef(null);
-
         const handleInputChange = (e) => {
+
                 const { name, value } = e.target;
                 if (name === 'title') {
                         setTitleError('');
@@ -38,28 +64,31 @@ export default function EditTask() {
         };
 
         const getPriorityColor = (priority) => {
+
                 switch (priority) {
                         case 1:
-                                return '#FF5757';
+                                return PRIORITY_COLORS[1];
                         case 2:
-                                return '#F5A623';
+                                return PRIORITY_COLORS[2];
                         case 3:
-                                return '#4A90E2';
+                                return PRIORITY_COLORS[3];
                         default:
-                                return '#CCC';
+                                return PRIORITY_COLORS.defaultColor;
                 }
         };
 
         const handleCancelEditTask = () => {
+
                 setNewTask({
                         title: '',
                         description: '',
                         deadline: '',
-                        priority: 1,
+                        priority: null,
                 });
         };
 
         const handleResetDeadline = () => {
+
                 setNewTask((prevTask) => ({
                         ...prevTask,
                         deadline: null,
@@ -67,14 +96,13 @@ export default function EditTask() {
                 setDeadlineError('');
         };
 
-        const handleEditTask = async (e) => {
+        const handleEditTask = async () => {
+
                 if (!newTask.title || newTask.title.trim() === '') {
                         setTitleError('Please enter a title for the task.');
                         return;
                 }
 
-                const today = new Date();
-                const yesterday = addDays(today, -1);
                 if (newTask.deadline && new Date(newTask.deadline) < yesterday) {
                         setDeadlineError('Invalid deadline. Please select a future date.');
                         return;
@@ -92,33 +120,15 @@ export default function EditTask() {
                 navigate('/');
         };
 
-
-        const loadTask = async () => {
-                const result = await axios.get(`http://localhost:8080/todo/${id}`);
-                setNewTask(result.data);
-        }
-
-        useEffect(() => {
-                titleInputRef.current.focus();
-        }, []);
-
-        useEffect(() => {
-                document.body.style.overflow = 'hidden';
-                return () => {
-                        document.body.style.overflow = 'auto';
-                };
-        }, []);
-
-        useEffect(() => {
-                loadTask();
-        }, []);
-
         return (
                 <div className="position-relative top-0 start-0 w-100 h-100 vh-100 d-flex align-items-center justify-content-center overflow-hidden">
                         <div className="col-8">
                                 <h1 className="text-white mb-4">Edit Task</h1>
                                 <div className="card text-white mb-3 bg-dark border-light" style={{ border: '2px solid #343a40' }}>
                                         <div className="card-body">
+
+                                                {/* TITLE */}
+
                                                 <div className="mb-3">
                                                         <input
                                                                 type="text"
@@ -132,6 +142,9 @@ export default function EditTask() {
                                                         />
                                                         {titleError && <p className="invalid-feedback">{titleError}</p>}
                                                 </div>
+
+                                                {/* DESCRIPTION */}
+
                                                 <div className="mb-3">
                                                         <input
                                                                 className="form-control border-0 bg-transparent text-white placeholder-color"
@@ -141,6 +154,9 @@ export default function EditTask() {
                                                                 onChange={handleInputChange}
                                                         ></input>
                                                 </div>
+
+                                                {/* DEADLINE */}
+
                                                 <div className="mb-3 text-white date-input-container d-flex align-items-center">
                                                         <CustomDatePicker newTask={newTask} handleInputChange={handleInputChange} />
 
@@ -151,6 +167,9 @@ export default function EditTask() {
                                                         )}
                                                 </div>
                                                 {deadlineError && <p className="text-danger">{deadlineError}</p>}
+
+                                                {/* PRIORITY */}
+
                                                 <div className='mb-3 text-white d-flex p-2'>
                                                         <div>Priority</div>
                                                         <div className='ms-3'>
@@ -170,6 +189,9 @@ export default function EditTask() {
                                                                 ))}
                                                         </div>
                                                 </div>
+
+                                                {/* BUTTONS */}
+
                                                 <div className="text-end">
                                                         <button className="btn btn-outline-light me-2 fs-5" onClick={handleEditTask}>
                                                                 <AiOutlineCheckCircle /> Submit

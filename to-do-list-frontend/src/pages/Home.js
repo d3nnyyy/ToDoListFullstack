@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye, AiOutlineCalendar, AiOutlinePlus, AiOutlineCloseCircle, AiOutlineCheckCircle } from 'react-icons/ai';
+import { confirmAlert } from 'react-confirm-alert';
+import axios from 'axios';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye, AiOutlineCalendar, AiOutlinePlus, AiOutlineCloseCircle } from 'react-icons/ai';
 import { GoCheckCircle } from 'react-icons/go';
 import { format, isToday, isTomorrow, addDays, isWithinInterval, isYesterday, isBefore } from 'date-fns';
-import DatePicker from 'react-datepicker';
+
 import CustomDatePicker from '../helpers/CustomDatePicker';
 
-import './Home.css'
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import './Home.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
@@ -18,27 +18,53 @@ export default function Home({ searchQuery, updateTaskCount }) {
      const [items, setItems] = useState([]);
      const [showAddTask, setShowAddTask] = useState(false);
      const [taskCount, setTaskCount] = useState(0);
+     const titleInputRef = useRef(null);
+
+     const [deadlineError, setDeadlineError] = useState('');
+     const [titleError, setTitleError] = useState('');
+
+     const today = new Date();
+     const sevenDaysFromNow = addDays(today, 7);
+     const yesterday = addDays(today, -1);
+
      const [newTask, setNewTask] = useState({
           title: '',
           description: '',
           deadline: '',
           priority: null,
      });
-     const [deadlineError, setDeadlineError] = useState('');
-     const [titleError, setTitleError] = useState('');
 
-     const titleInputRef = useRef(null);
+     const DEADLINE_COLORS = {
+          todayColor: '#66BB6A',
+          tomorrowColor: '#f5c842',
+          withinSevenDaysColor: '#4A90E2',
+          beforeColor: '#C00C00',
+          defaultColor: '#CCC',
+     };
 
-     useEffect(() => {
-          if (showAddTask) {
-               titleInputRef.current.focus();
-          }
-          loadItems();
-     }, [showAddTask]);
+     const PRIORITY_COLORS = {
+          1: '#FF5757',
+          2: '#F5A623',
+          3: '#4A90E2',
+          defaultColor: '#CCC',
+     };
 
-     useEffect(() => {
-          updateTaskCount(taskCount);
-     }, [taskCount]);
+
+     useEffect(
+          () => {
+
+               if (showAddTask) {
+                    titleInputRef.current.focus();
+               }
+               loadItems();
+
+          },
+          [showAddTask]);
+
+     useEffect(
+          () => {
+               updateTaskCount(taskCount);
+          }, [taskCount]);
 
      const loadItems = async () => {
           const result = await axios.get('http://localhost:8080/todo');
@@ -46,6 +72,7 @@ export default function Home({ searchQuery, updateTaskCount }) {
      };
 
      const deleteItem = (id) => {
+
           confirmAlert({
                title: 'Confirm Delete',
                message: 'Are you sure you want to delete this task?',
@@ -63,22 +90,21 @@ export default function Home({ searchQuery, updateTaskCount }) {
                     }
                ]
           });
+
      };
 
-
-
      const markAsDone = async (id) => {
+
           await axios.put(`http://localhost:8080/todo/${id}`, {
                done: true,
                completedDate: new Date(),
           });
           loadItems();
           setTaskCount(taskCount + 1);
+
      };
 
      const getFormattedDate = (date) => {
-          const today = new Date();
-          const sevenDaysFromNow = addDays(today, 7);
 
           if (isToday(date)) {
                return 'Today';
@@ -93,79 +119,55 @@ export default function Home({ searchQuery, updateTaskCount }) {
           }
      };
 
-     const getDeadlineColor = (deadline) => {
-          const todayColor = '#66BB6A';
-          const tomorrowColor = '#f5c842';
-          const withinSevenDaysColor = '#4A90E2';
-          const beforeColor = '#C00C00';
-          const defaultColor = '#CCC';
 
-          const today = new Date();
-          const sevenDaysFromNow = addDays(today, 7);
+     const getDeadlineColor = (deadline) => {
 
           if (isToday(deadline)) {
-               return todayColor;
+               return DEADLINE_COLORS.todayColor;
           } else if (isTomorrow(deadline)) {
-               return tomorrowColor;
+               return DEADLINE_COLORS.tomorrowColor;
           } else if (isWithinInterval(deadline, { start: today, end: sevenDaysFromNow })) {
-               return withinSevenDaysColor;
+               return DEADLINE_COLORS.withinSevenDaysColor;
           } else if (isBefore(deadline, today)) {
-               return beforeColor;
+               return DEADLINE_COLORS.beforeColor;
           } else {
-               return defaultColor;
-          }
-     }
-
-     const getPriorityColor = (priority) => {
-          switch (priority) {
-               case 1:
-                    return '#FF5757';
-               case 2:
-                    return '#F5A623';
-               case 3:
-                    return '#4A90E2';
-               default:
-                    return '#CCC';
+               return DEADLINE_COLORS.defaultColor;
           }
      };
 
 
+     const getPriorityColor = (priority) => {
+
+          switch (priority) {
+               case 1:
+                    return PRIORITY_COLORS[1];
+               case 2:
+                    return PRIORITY_COLORS[2];
+               case 3:
+                    return PRIORITY_COLORS[3];
+               default:
+                    return PRIORITY_COLORS.defaultColor;
+          }
+
+     };
+
      const handleInputChange = (event) => {
+
           const { name, value } = event.target;
           setNewTask((prevTask) => ({
                ...prevTask,
                [name]: value,
           }));
+
      };
 
-     // const handleInputChange = (e) => {
-     //      const { name, value } = e.target;
-
-     //      if (name === 'title') {
-     //           setTitleError('');
-     //      } else if (name === 'deadline') {
-     //           const selectedDate = value ? new Date(value) : null;
-     //           selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
-     //           setNewTask((prevTask) => ({
-     //                ...prevTask,
-     //                deadline: selectedDate,
-     //           }));
-     //           setDeadlineError('');
-     //           return;
-     //      }
-
-     //      setNewTask((prevTask) => ({ ...prevTask, [name]: value }));
-     // };
-
-
      const handleAddTask = async (e) => {
+
           if (newTask.title.trim() === '') {
                setTitleError('Please enter a title for the task.');
                return;
           }
 
-          const today = new Date();
-          const yesterday = addDays(today, -1);
           if (newTask.deadline && new Date(newTask.deadline) < yesterday) {
                setDeadlineError('Invalid deadline. Please select a future date.');
                return;
@@ -182,29 +184,33 @@ export default function Home({ searchQuery, updateTaskCount }) {
                title: '',
                description: '',
                deadline: '',
-               priority: 1,
+               priority: null,
           });
 
           loadItems();
      };
 
      const handleCancelAddTask = () => {
+
           setNewTask({
                title: '',
                description: '',
                deadline: '',
-               priority: 1,
+               priority: null,
           });
 
           setShowAddTask(false);
+
      };
 
      const handleResetDeadline = () => {
+
           setNewTask((prevTask) => ({
                ...prevTask,
                deadline: '',
           }));
           setDeadlineError('');
+
      };
 
      const filteredItems = items.filter(
@@ -212,6 +218,9 @@ export default function Home({ searchQuery, updateTaskCount }) {
      );
 
      if (filteredItems.length === 0) {
+
+          // NO TASKS TO DO
+
           return (
                <div className="container-fluid py-4 bg-dark d-flex flex-column align-items-center" style={{ minHeight: '100vh' }}>
                     <div className="text-white">
@@ -229,16 +238,23 @@ export default function Home({ searchQuery, updateTaskCount }) {
                     </div>
                </div>
           );
+
      }
 
      return (
           <div className="container-fluid py-4 bg-dark d-flex flex-column align-items-center" style={{ minHeight: '100vh' }}>
+
+               {/* LIST OF TASKS */}
+
                <ul className="list-group mb-2 col-8">
                     {filteredItems.map((item, index) => (
                          <li key={index} className="list-group-item bg-dark">
                               <div className="d-flex justify-content-between align-items-center text-white">
                                    <div className="d-flex">
-                                        <span className="me-3 color-red">
+
+                                        {/* MARK AS DONE BUTTON */}
+
+                                        <span className="me-3">
                                              <span
                                                   className="done btn btn-circle text-white fs-5"
                                                   onClick={() => markAsDone(item.id)}
@@ -248,6 +264,9 @@ export default function Home({ searchQuery, updateTaskCount }) {
                                                   />
                                              </span>
                                         </span>
+
+                                        {/* TASK TITLE AND DEADLINE */}
+
                                         <div>
                                              <h5 className="mb-1 d-flex align-items-center">
                                                   <p className="m-0">{item.title}</p>
@@ -266,25 +285,35 @@ export default function Home({ searchQuery, updateTaskCount }) {
                                                   </div>
                                              </div>
                                         </div>
+
                                    </div>
+
+                                   {/* EDIT, VIEW, DELETE BUTTONS */}
+
                                    <div>
+
                                         <Link className="me-3 text-white fs-5" to={`/viewTask/${item.id}`}>
                                              <AiOutlineEye />
                                         </Link>
+
                                         <Link className="me-3 text-white fs-5" to={`/editTask/${item.id}`}>
                                              <AiOutlineEdit />
                                         </Link>
+
                                         <button
                                              className="btn btn-transparent text-white fs-5"
                                              onClick={() => deleteItem(item.id)}
                                         >
                                              <AiOutlineDelete />
                                         </button>
+
                                    </div>
                               </div>
                          </li>
                     ))}
                </ul>
+
+               {/* ADD TASK BUTTON*/}
 
                <div className="mb-3 d-flex align-items-center">
                     <button
@@ -310,24 +339,32 @@ export default function Home({ searchQuery, updateTaskCount }) {
                     </button>
                </div>
 
+               {/* ADD TASK FORM */}
 
                {showAddTask && (
                     <div className="card text-white mb-3 bg-dark col-6" style={{ border: '2px solid #343a40' }}>
                          <div className="card-body">
+
+                              {/* TITLE */}
+
                               <div className="mb-3">
+
                                    <input
                                         type="text"
-                                        className={`form-control bg-transparent text-white placeholder-color ${titleError ? 'is-invalid' : 'border-0'
-                                             }`}
+                                        className={`form-control bg-transparent text-white placeholder-color ${titleError ? 'is-invalid' : 'border-0'}`}
                                         name="title"
                                         placeholder="Task Title"
                                         value={newTask.title}
                                         onChange={handleInputChange}
                                         ref={titleInputRef}
+                                        style={{ color: 'white' }}
                                    />
                                    {titleError && <p className="invalid-feedback">{titleError}</p>}
 
                               </div>
+
+                              {/* DESCRIPTION */}
+
                               <div className="mb-3">
                                    <input
                                         className="form-control border-0 bg-transparent text-white placeholder-color"
@@ -337,9 +374,11 @@ export default function Home({ searchQuery, updateTaskCount }) {
                                         onChange={handleInputChange}
                                    ></input>
                               </div>
+
+                              {/* DEADLINE */}
+
                               <div className="mb-3 d-flex align-items-center text-dark">
                                    <CustomDatePicker newTask={newTask} handleInputChange={handleInputChange} />
-
                                    {newTask.deadline && (
                                         <button className="reset-date-button" onClick={handleResetDeadline}>
                                              <AiOutlineCloseCircle />
@@ -347,6 +386,9 @@ export default function Home({ searchQuery, updateTaskCount }) {
                                    )}
                               </div>
                               {deadlineError && <p className="text-danger">{deadlineError}</p>}
+
+                              {/* PRIORITY */}
+
                               <div className='mb-3 text-white d-flex p-2'>
                                    <div>Priority</div>
                                    <div className='ms-3'>
@@ -366,6 +408,9 @@ export default function Home({ searchQuery, updateTaskCount }) {
                                         ))}
                                    </div>
                               </div>
+
+                              {/* SUBMIT AND CANCEL BUTTONS */}
+
                               <div className="text-end">
                                    <button className="btn btn-transparent me-2 text-white fs-5" onClick={handleAddTask}>
                                         <p>Add task</p>

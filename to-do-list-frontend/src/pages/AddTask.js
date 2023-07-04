@@ -9,72 +9,88 @@ export default function AddTask() {
      const navigate = useNavigate();
      const [showAddTask, setShowAddTask] = useState(false);
      const [items, setItems] = useState([]);
+     const titleInputRef = useRef(null);
+
+     const [deadlineError, setDeadlineError] = useState('');
+     const [titleError, setTitleError] = useState('');
+
+     const today = new Date();
+     const yesterday = addDays(today, -1);
+
      const [newTask, setNewTask] = useState({
           title: '',
           description: '',
           deadline: '',
-          priority: 1,
+          priority: null,
      });
-     const [deadlineError, setDeadlineError] = useState('');
-     const [titleError, setTitleError] = useState('');
+
+     const PRIORITY_COLORS = {
+          1: '#FF5757',
+          2: '#F5A623',
+          3: '#4A90E2',
+          defaultColor: '#CCC',
+     };
 
      const loadItems = async () => {
           const result = await axios.get('http://localhost:8080/todo');
           setItems(result.data);
      };
 
-     const titleInputRef = useRef(null);
 
      const handleInputChange = (e) => {
+
           const { name, value } = e.target;
-          if (name === 'title') {
-               setTitleError('');
-          } else if (name === 'deadline') {
-               setNewTask((prevTask) => ({ ...prevTask, deadline: value }));
-               setDeadlineError('');
-               return;
-          }
-          setNewTask((prevTask) => ({ ...prevTask, [name]: value }));
+          setNewTask((prevTask) => ({
+               ...prevTask,
+               [name]: value,
+          }));
+
      };
 
      const getPriorityColor = (priority) => {
+
           switch (priority) {
                case 1:
-                    return '#FF5757';
+                    return PRIORITY_COLORS[1];
                case 2:
-                    return '#F5A623';
+                    return PRIORITY_COLORS[2];
                case 3:
-                    return '#4A90E2';
+                    return PRIORITY_COLORS[3];
                default:
-                    return '#CCC';
+                    return PRIORITY_COLORS.defaultColor;
           }
+
      };
 
      const handleCancelAddTask = () => {
+
           setNewTask({
                title: '',
                description: '',
                deadline: '',
-               priority: 1,
+               priority: null,
           });
           setShowAddTask(false);
+
      };
 
      const handleResetDeadline = () => {
+
           setNewTask((prevTask) => ({
                ...prevTask,
                deadline: '',
           }));
           setDeadlineError('');
+
      };
+
      const handleAddTask = async (e) => {
+
           if (newTask.title.trim() === '') {
                setTitleError('Please enter a title for the task.');
                return;
           }
 
-          const today = new Date();
-          const yesterday = addDays(today, -1);
           if (newTask.deadline && new Date(newTask.deadline) < yesterday) {
                setDeadlineError('Invalid deadline. Please select a future date.');
                return;
@@ -91,23 +107,13 @@ export default function AddTask() {
                title: '',
                description: '',
                deadline: '',
-               priority: 1,
+               priority: null,
           });
 
           loadItems();
           navigate('/');
+
      };
-
-     useEffect(() => {
-          titleInputRef.current.focus();
-     }, []);
-
-     useEffect(() => {
-          document.body.style.overflow = 'hidden';
-          return () => {
-               document.body.style.overflow = 'auto';
-          };
-     }, []);
 
      return (
           <div className="position-relative top-0 start-0 w-100 h-100 vh-100 d-flex align-items-center justify-content-center overflow-hidden">
@@ -115,6 +121,9 @@ export default function AddTask() {
                     <h1 className="text-white mb-4">Add Task</h1>
                     <div className="card text-white mb-3 bg-dark" style={{ border: '2px solid #343a40' }}>
                          <div className="card-body">
+
+                              {/* TITLE */}
+
                               <div className="mb-3">
                                    <input
                                         type="text"
@@ -128,6 +137,9 @@ export default function AddTask() {
                                    />
                                    {titleError && <p className="invalid-feedback">{titleError}</p>}
                               </div>
+
+                              {/* DESCRIPTION */}
+
                               <div className="mb-3">
                                    <input
                                         className="form-control border-0 bg-transparent text-white placeholder-color"
@@ -137,6 +149,9 @@ export default function AddTask() {
                                         onChange={handleInputChange}
                                    ></input>
                               </div>
+
+                              {/* DEADLINE */}
+
                               <div className="mb-3 text-white date-input-container d-flex align-items-center">
                                    <CustomDatePicker newTask={newTask} handleInputChange={handleInputChange} />
                                    {newTask.deadline && (
@@ -146,6 +161,9 @@ export default function AddTask() {
                                    )}
                               </div>
                               {deadlineError && <p className="text-danger">{deadlineError}</p>}
+
+                              {/* PRIORITY */}
+
                               <div className='mb-3 text-white d-flex p-2'>
                                    <div>Priority</div>
                                    <div className='ms-3'>
@@ -165,6 +183,9 @@ export default function AddTask() {
                                         ))}
                                    </div>
                               </div>
+
+                              {/* BUTTONS */}
+
                               <div className="text-end">
                                    <button className="btn btn-transparent me-2 text-white fs-5" onClick={handleAddTask}>
                                         <p>Add task</p>
@@ -173,6 +194,7 @@ export default function AddTask() {
                                         <p>Cancel</p>
                                    </Link>
                               </div>
+
                          </div>
                     </div>
                </div>

@@ -13,7 +13,7 @@ input:focus {
 }
 
 .placeholder-color::placeholder {
-        color: white;
+        color: white !important;
 }
 
 .date-input-container {
