@@ -121,7 +121,7 @@ export default function EditTask() {
         };
 
         return (
-                <div className="position-relative top-0 start-0 w-100 h-100 vh-100 d-flex align-items-center justify-content-center overflow-hidden">
+                <div className="container-fluid py-4 bg-dark d-flex flex-column justify-content-center align-items-center vh-100">
                         <div className="col-8">
                                 <h1 className="text-white mb-4">Edit Task</h1>
                                 <div className="card text-white mb-3 bg-dark border-light" style={{ border: '2px solid #343a40' }}>

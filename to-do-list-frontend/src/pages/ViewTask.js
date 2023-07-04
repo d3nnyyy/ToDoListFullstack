@@ -28,7 +28,7 @@ export default function ViewTask() {
         }
 
         return (
-                <div className="position-relative top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                <div className="container-fluid py-4 bg-dark d-flex flex-column justify-content-center align-items-center vh-100">
                         <div className="col-8">
                                 <div className="card border-light mb-3 bg-dark text-light">
                                         <div className="card-header border-light">
