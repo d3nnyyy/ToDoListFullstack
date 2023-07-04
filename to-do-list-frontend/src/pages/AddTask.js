@@ -31,6 +31,15 @@ export default function AddTask() {
           defaultColor: '#CCC',
      };
 
+     useEffect(
+          () => {
+
+               titleInputRef.current.focus();
+               loadItems();
+
+          },
+          []);
+
      const loadItems = async () => {
           const result = await axios.get('http://localhost:8080/todo');
           setItems(result.data);

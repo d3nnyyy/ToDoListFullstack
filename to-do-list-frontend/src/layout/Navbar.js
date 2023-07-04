@@ -18,6 +18,9 @@ export default function Navbar({ taskCount, onSearch }) {
           >
                <div className="container">
                     <div className={`collapse navbar-collapse`}>
+
+                         {/* LEFT PART */}
+
                          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                               <li className="nav-item">
                                    <Link className="nav-link" to="/">
@@ -32,6 +35,9 @@ export default function Navbar({ taskCount, onSearch }) {
                                    </Link>
                               </li>
                          </ul>
+
+                         {/* RIGHT PART */}
+
                          <div className="d-flex align-items-center">
                               <span className="text-light me-3">Done Today: {taskCount}</span>
                               <form className="d-flex">

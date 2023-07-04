@@ -126,10 +126,13 @@ export default function Today({ searchQuery, updateTaskCount }) {
 
      };
 
+     const filteredItems = items
+          .filter((item) => !item.done && item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+          .sort((a, b) => {
 
-     const filteredItems = items.filter(
-          (item) => !item.done && item.title.toLowerCase().includes(searchQuery.toLowerCase())
-     );
+               return parseInt(a.priority, 10) - parseInt(b.priority, 10);
+
+          });
 
      if (filteredItems.length === 0) {
 
@@ -138,7 +141,7 @@ export default function Today({ searchQuery, updateTaskCount }) {
           return (
                <div className="container-fluid py-4 bg-dark d-flex flex-column align-items-center" style={{ minHeight: '100vh' }}>
                     <div className="text-white">
-                         <h2>No tasks to do</h2>
+                         <h2>No tasks to do for today</h2>
                          <p>Start adding tasks to stay organized.</p>
                          <div style={{ fontSize: '5em' }}>
                               <AiOutlineCalendar />

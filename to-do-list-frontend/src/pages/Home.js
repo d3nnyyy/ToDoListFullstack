@@ -213,9 +213,18 @@ export default function Home({ searchQuery, updateTaskCount }) {
 
      };
 
-     const filteredItems = items.filter(
-          (item) => !item.done && item.title.toLowerCase().includes(searchQuery.toLowerCase())
-     );
+     const filteredItems = items
+          .filter((item) => !item.done && item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+          .sort((a, b) => {
+
+               const deadlineComparison = new Date(a.deadline) - new Date(b.deadline);
+               if (deadlineComparison !== 0) {
+                    return deadlineComparison;
+               }
+
+               return parseInt(a.priority, 10) - parseInt(b.priority, 10);
+
+          });
 
      if (filteredItems.length === 0) {
 
