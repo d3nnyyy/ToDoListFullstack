@@ -1,46 +1,19 @@
+@import "~react-confirm-alert/src/react-confirm-alert.css";
+
+input:focus {
+        border: 1px solid #0af;
+        outline: none;
+        -moz-box-shadow: 0px 0px 15px rgba(0, 170, 255, .5);
+        -webkit-box-shadow: 0px 0px 15px rgba(0, 170, 255, .5);
+        box-shadow: 0px 0px 15px rgba(0, 170, 255, .5);
+}
+
 .done:hover {
         transform: scale(1.1);
 }
 
 .placeholder-color::placeholder {
         color: white;
-}
-
-.custom-datepicker-popper {
-        background-color: #343a40;
-        color: #ffffff;
-}
-
-.custom-datepicker-calendar {
-        background-color: #343a40;
-        color: #ffffff;
-}
-
-.react-datepicker__header {
-        background-color: #343a40;
-        border-bottom: none;
-        color: #ffffff;
-}
-
-.react-datepicker__day-name,
-.react-datepicker__day {
-        color: #ffffff;
-}
-
-.react-datepicker__current-month {
-        color: #ffffff;
-}
-
-.react-datepicker__day--selected {
-        background-color: #4a90e2;
-}
-
-.react-datepicker__day--keyboard-selected {
-        background-color: #4a90e2;
-}
-
-.react-datepicker__day--today {
-        font-weight: bold;
 }
 
 .date-input-container {

@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye, AiOutlineCalendar, AiOutlinePlus, AiOutlineCloseCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 import { GoCheckCircle } from 'react-icons/go';
 import { format, isToday, isTomorrow, addDays, isWithinInterval, isYesterday, isBefore } from 'date-fns';
 import DatePicker from 'react-datepicker';
+import CustomDatePicker from '../helpers/CustomDatePicker';
 
 import './Home.css'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -42,10 +45,27 @@ export default function Home({ searchQuery, updateTaskCount }) {
           setItems(result.data);
      };
 
-     const deleteItem = async (id) => {
-          await axios.delete(`http://localhost:8080/todo/${id}`);
-          loadItems();
+     const deleteItem = (id) => {
+          confirmAlert({
+               title: 'Confirm Delete',
+               message: 'Are you sure you want to delete this task?',
+               buttons: [
+                    {
+                         label: 'Yes',
+                         onClick: async () => {
+                              await axios.delete(`http://localhost:8080/todo/${id}`);
+                              loadItems();
+                         }
+                    },
+                    {
+                         label: 'No',
+                         onClick: () => { }
+                    }
+               ]
+          });
      };
+
+
 
      const markAsDone = async (id) => {
           await axios.put(`http://localhost:8080/todo/${id}`, {
@@ -109,17 +129,34 @@ export default function Home({ searchQuery, updateTaskCount }) {
           }
      };
 
-     const handleInputChange = (e) => {
-          const { name, value } = e.target;
-          if (name === 'title') {
-               setTitleError('');
-          } else if (name === 'deadline') {
-               setNewTask((prevTask) => ({ ...prevTask, deadline: value }));
-               setDeadlineError('');
-               return;
-          }
-          setNewTask((prevTask) => ({ ...prevTask, [name]: value }));
+
+     const handleInputChange = (event) => {
+          const { name, value } = event.target;
+          setNewTask((prevTask) => ({
+               ...prevTask,
+               [name]: value,
+          }));
      };
+
+     // const handleInputChange = (e) => {
+     //      const { name, value } = e.target;
+
+     //      if (name === 'title') {
+     //           setTitleError('');
+     //      } else if (name === 'deadline') {
+     //           const selectedDate = value ? new Date(value) : null;
+     //           selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
+     //           setNewTask((prevTask) => ({
+     //                ...prevTask,
+     //                deadline: selectedDate,
+     //           }));
+     //           setDeadlineError('');
+     //           return;
+     //      }
+
+     //      setNewTask((prevTask) => ({ ...prevTask, [name]: value }));
+     // };
+
 
      const handleAddTask = async (e) => {
           if (newTask.title.trim() === '') {
@@ -292,33 +329,17 @@ export default function Home({ searchQuery, updateTaskCount }) {
 
                               </div>
                               <div className="mb-3">
-                                   <textarea
+                                   <input
                                         className="form-control border-0 bg-transparent text-white placeholder-color"
                                         name="description"
                                         placeholder="Task Description"
                                         value={newTask.description}
                                         onChange={handleInputChange}
-                                        style={{ height: '1px' }}
-                                   ></textarea>
+                                   ></input>
                               </div>
-                              <div className="mb-3 text-white date-input-container d-flex align-items-center">
-                                   <DatePicker
-                                        className="form-control border-0 bg-transparent text-white placeholder-color custom-datepicker"
-                                        selected={newTask.deadline ? new Date(newTask.deadline) : null}
-                                        onChange={(date) => handleInputChange({ target: { name: 'deadline', value: date.toISOString().slice(0, 10) } })} placeholderText="Deadline"
-                                        dateFormat="yyyy-MM-dd"
-                                        popperPlacement="bottom"
-                                        popperModifiers={{
-                                             preventOverflow: {
-                                                  enabled: true,
-                                                  escapeWithReference: false,
-                                                  boundariesElement: 'viewport',
-                                             },
-                                        }}
-                                        popperContainer={({ children }) => (
-                                             <div className="custom-datepicker-popper">{children}</div>
-                                        )}
-                                   />
+                              <div className="mb-3 d-flex align-items-center text-dark">
+                                   <CustomDatePicker newTask={newTask} handleInputChange={handleInputChange} />
+
                                    {newTask.deadline && (
                                         <button className="reset-date-button" onClick={handleResetDeadline}>
                                              <AiOutlineCloseCircle />
@@ -327,12 +348,23 @@ export default function Home({ searchQuery, updateTaskCount }) {
                               </div>
                               {deadlineError && <p className="text-danger">{deadlineError}</p>}
                               <div className='mb-3 text-white d-flex p-2'>
-                                   {[1, 2, 3, 4].map(value => (
-                                        <div key={value} className='form-check-inline'>
-                                             <input className='form-check-input' type='radio' name='priority' value={value} checked={newTask.priority === String(value)} onChange={e => handleInputChange(e)} />
-                                             <label className='form-check-label'>{value}</label>
-                                        </div>
-                                   ))}
+                                   <div>Priority</div>
+                                   <div className='ms-3'>
+                                        {[1, 2, 3, 4].map(value => (
+                                             <div key={value} className='form-check-inline'>
+                                                  <input
+                                                       className='form-check-input'
+                                                       type='radio'
+                                                       name='priority'
+                                                       value={value}
+                                                       checked={newTask.priority === String(value)}
+                                                       onChange={e => handleInputChange(e)}
+                                                       style={{ backgroundColor: newTask.priority === String(value) ? getPriorityColor(value) : '' }}
+                                                  />
+                                                  <label className='form-check-label'>{value}</label>
+                                             </div>
+                                        ))}
+                                   </div>
                               </div>
                               <div className="text-end">
                                    <button className="btn btn-transparent me-2 text-white fs-5" onClick={handleAddTask}>

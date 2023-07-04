@@ -30,7 +30,7 @@ export default function ViewTask() {
                         <div className="col-8">
                                 <div className="card border-light mb-3 bg-dark text-light">
                                         <div className="card-header border-light">
-                                                <h5 className="mb-0">{task.title}</h5>
+                                                <h1 className="mb-0">{task.title}</h1>
                                         </div>
                                         <div className="card-body">
                                                 <p className="card-text"><strong>Description:</strong> {task.description}</p>
