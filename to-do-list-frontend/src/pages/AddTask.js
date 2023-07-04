@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AiOutlineCloseCircle, AiOutlineCheckCircle, AiOutlineClose } from 'react-icons/ai';
 import CustomDatePicker from '../helpers/CustomDatePicker';
 import { addDays } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
@@ -128,7 +128,7 @@ export default function AddTask() {
           <div className="position-relative top-0 start-0 w-100 h-100 vh-100 d-flex align-items-center justify-content-center overflow-hidden">
                <div className="col-8">
                     <h1 className="text-white mb-4">Add Task</h1>
-                    <div className="card text-white mb-3 bg-dark" style={{ border: '2px solid #343a40' }}>
+                    <div className="card text-white mb-3 bg-dark" style={{ border: '2px solid white' }}>
                          <div className="card-body">
 
                               {/* TITLE */}
@@ -196,11 +196,11 @@ export default function AddTask() {
                               {/* BUTTONS */}
 
                               <div className="text-end">
-                                   <button className="btn btn-transparent me-2 text-white fs-5" onClick={handleAddTask}>
-                                        <p>Add task</p>
+                                   <button className="btn btn-outline-light me-2 fs-5" onClick={handleAddTask}>
+                                        <AiOutlineCheckCircle /> Add Task
                                    </button>
-                                   <Link className="btn btn-transparent text-white fs-5" to={"/"} onClick={handleCancelAddTask}>
-                                        <p>Cancel</p>
+                                   <Link className="btn btn-outline-light fs-5" to={'/'} onClick={handleCancelAddTask}>
+                                        <AiOutlineClose /> Cancel
                                    </Link>
                               </div>
 
