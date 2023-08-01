@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/todo")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ToDoItemController {
 
     private final ToDoItemRepository repository;
