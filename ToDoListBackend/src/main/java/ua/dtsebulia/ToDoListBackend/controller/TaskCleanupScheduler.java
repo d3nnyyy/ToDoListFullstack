@@ -17,13 +17,6 @@ public class TaskCleanupScheduler {
         this.repository = repository;
     }
 
-    @PostConstruct
-    @Transactional
-    public void performInitialCleanup() {
-        LocalDate oneDayAgo = LocalDate.now().minusDays(1);
-        repository.deleteByDoneAndCompletedDateBefore(true, oneDayAgo);
-    }
-
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteCompletedTasksOlderThanOneDay() {
