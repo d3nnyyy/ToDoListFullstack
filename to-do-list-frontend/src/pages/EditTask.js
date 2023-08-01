@@ -41,12 +41,12 @@ export default function EditTask() {
         }, []);
 
         const loadTask = async () => {
-                const result = await axios.get(`http://localhost:8080/todo/${id}`);
+                const result = await axios.get(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`);
                 setNewTask(result.data);
         }
 
         const loadItems = async () => {
-                const result = await axios.get('http://localhost:8080/todo');
+                const result = await axios.get('http://todolist.eu-central-1.elasticbeanstalk.com/todo');
                 setItems(result.data);
         };
 
@@ -114,7 +114,7 @@ export default function EditTask() {
                                 ? new Date(newTask.deadline.trim()) : null,
                 };
 
-                await axios.put(`http://localhost:8080/todo/${id}`, taskToAdd);
+                await axios.put(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`, taskToAdd);
 
                 loadItems();
                 navigate('/');

@@ -42,7 +42,7 @@ export default function Today({ searchQuery, updateTaskCount }) {
           }, [taskCount]);
 
      const loadItems = async () => {
-          const result = await axios.get('http://localhost:8080/todo/today');
+          const result = await axios.get('http://todolist.eu-central-1.elasticbeanstalk.com/todo/today');
           setItems(result.data);
      };
 
@@ -55,7 +55,7 @@ export default function Today({ searchQuery, updateTaskCount }) {
                     {
                          label: 'Yes',
                          onClick: async () => {
-                              await axios.delete(`http://localhost:8080/todo/${id}`);
+                              await axios.delete(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`);
                               loadItems();
                          }
                     },
@@ -70,7 +70,7 @@ export default function Today({ searchQuery, updateTaskCount }) {
 
      const markAsDone = async (id) => {
 
-          await axios.put(`http://localhost:8080/todo/${id}`, {
+          await axios.put(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`, {
                done: true,
                completedDate: new Date(),
           });
