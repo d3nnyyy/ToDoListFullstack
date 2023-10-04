@@ -15,7 +15,7 @@ export default function ViewTask() {
         const fetchTask = async () => {
 
                 try {
-                        const response = await axios.get(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`);
+                        const response = await axios.get(`http://localhost:8080/todo/${id}`);
                         setTask(response.data);
                 } catch (error) {
                         console.error('Error:', error);

@@ -67,7 +67,7 @@ export default function Home({ searchQuery, updateTaskCount }) {
           }, [taskCount]);
 
      const loadItems = async () => {
-          const result = await axios.get('http://todolist.eu-central-1.elasticbeanstalk.com/todo');
+          const result = await axios.get('http://localhost:8080/todo');
           setItems(result.data);
      };
 
@@ -80,7 +80,7 @@ export default function Home({ searchQuery, updateTaskCount }) {
                     {
                          label: 'Yes',
                          onClick: async () => {
-                              await axios.delete(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`);
+                              await axios.delete(`http://localhost:8080/todo/${id}`);
                               loadItems();
                          }
                     },
@@ -95,7 +95,7 @@ export default function Home({ searchQuery, updateTaskCount }) {
 
      const markAsDone = async (id) => {
 
-          await axios.put(`http://todolist.eu-central-1.elasticbeanstalk.com/todo/${id}`, {
+          await axios.put(`http://localhost:8080/todo/${id}`, {
                done: true,
                completedDate: new Date(),
           });
@@ -178,7 +178,7 @@ export default function Home({ searchQuery, updateTaskCount }) {
                deadline: newTask.deadline.trim() !== '' ? new Date(newTask.deadline.trim()) : null,
           };
 
-          await axios.post('http://todolist.eu-central-1.elasticbeanstalk.com/todo', taskToAdd);
+          await axios.post('http://localhost:8080/todo', taskToAdd);
 
           setNewTask({
                title: '',

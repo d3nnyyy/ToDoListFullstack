@@ -41,7 +41,7 @@ export default function AddTask() {
           []);
 
      const loadItems = async () => {
-          const result = await axios.get('http://todolist.eu-central-1.elasticbeanstalk.com/todo');
+          const result = await axios.get('http://localhost:8080/todo');
           setItems(result.data);
      };
 
@@ -110,7 +110,7 @@ export default function AddTask() {
                deadline: newTask.deadline.trim() !== '' ? new Date(newTask.deadline.trim()) : null,
           };
 
-          await axios.post('http://todolist.eu-central-1.elasticbeanstalk.com/todo', taskToAdd);
+          await axios.post('http://localhost:8080/todo', taskToAdd);
 
           setNewTask({
                title: '',
