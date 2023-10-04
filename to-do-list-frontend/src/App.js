@@ -27,7 +27,7 @@ function App() {
   const fetchTaskCount = async () => {
 
     try {
-      const response = await axios.get('http://todolist.eu-central-1.elasticbeanstalk.com/todo');
+      const response = await axios.get('http://localhost:8080/todo/done-today');
       setTaskCount(response.data.length);
     } catch (error) {
       console.error('Error:', error);
